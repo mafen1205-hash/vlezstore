@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VLEZ STORE — Игровой магазин</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --n1:#b400ff;--n2:#00f0ff;--n3:#ff2d78;--n4:#39ff14;
+  --bg:#080810;--bg2:#0d0d1a;--bg3:#12122a;--bg4:#1a1a35;
+  --txt:#e8e8ff;--txt2:#9090bb;--txt3:#5555aa;
+  --card:#0f0f22;--border:rgba(255,255,255,0.07);--border2:rgba(0,240,255,0.2);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--txt);font-family:'Inter',sans-serif;min-height:100vh;overflow-x:hidden}
+::-webkit-scrollbar{width:6px}::-webkit-scrollbar-track{background:var(--bg2)}::-webkit-scrollbar-thumb{background:rgba(180,0,255,0.4);border-radius:3px}
+.page{display:none}.page.active{display:block}
+
+/* NAV */
+nav{background:rgba(8,8,16,0.97);backdrop-filter:blur(16px);border-bottom:1px solid rgba(180,0,255,0.2);padding:0 32px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
+.nav-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:22px;color:#fff;letter-spacing:3px;cursor:pointer;user-select:none}
+.nav-logo span{color:var(--n2)}.nav-logo small{font-size:9px;letter-spacing:4px;color:var(--txt3);display:block;margin-top:-2px}
+.nav-links{display:flex;gap:2px}
+.nav-link{background:none;border:none;color:var(--txt2);font-family:'Inter',sans-serif;font-size:13px;padding:6px 14px;border-radius:6px;cursor:pointer;transition:color .2s,background .2s}
+.nav-link:hover,.nav-link.active{color:var(--n2);background:rgba(0,240,255,0.08)}
+.nav-right{display:flex;align-items:center;gap:10px}
+.nav-cart{background:rgba(180,0,255,0.12);border:1px solid rgba(180,0,255,0.35);color:#e0d0ff;padding:7px 18px;border-radius:7px;font-size:13px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px;font-family:'Inter',sans-serif}
+.nav-cart:hover{background:rgba(180,0,255,0.25)}
+.cart-badge{background:var(--n3);color:#fff;font-size:10px;font-weight:700;padding:1px 6px;border-radius:10px;min-width:18px;text-align:center}
+.nav-avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,var(--n1),var(--n2));display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:border-color .2s}
+.nav-avatar:hover{border-color:var(--n2)}
+.nav-login{background:none;border:1px solid var(--border2);color:var(--n2);padding:7px 18px;border-radius:7px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif;transition:all .2s}
+.nav-login:hover{background:rgba(0,240,255,0.08)}
+.user-info{display:flex;align-items:center;gap:8px;cursor:pointer}
+.user-name{font-size:13px;color:var(--txt2)}
+
+/* HERO */
+.hero{position:relative;background:var(--bg2);border-bottom:1px solid rgba(0,240,255,0.08);overflow:hidden;height:360px;display:flex;align-items:center}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse 70% 80% at 65% 50%,rgba(180,0,255,0.18) 0%,transparent 70%),radial-gradient(ellipse 50% 60% at 5% 50%,rgba(0,240,255,0.1) 0%,transparent 60%)}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(0,240,255,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(0,240,255,0.035) 1px,transparent 1px);background-size:44px 44px}
+.hero-content{position:relative;z-index:2;padding:0 48px;max-width:580px}
+.hero-eyebrow{display:inline-flex;align-items:center;gap:8px;background:rgba(255,45,120,0.12);border:1px solid rgba(255,45,120,0.3);color:var(--n3);font-size:11px;font-weight:500;letter-spacing:2px;text-transform:uppercase;padding:5px 14px;border-radius:5px;margin-bottom:18px}
+.hero-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:52px;line-height:1.02;color:#fff;margin-bottom:14px}
+.hero-title em{color:var(--n2);font-style:normal}
+.hero-desc{color:var(--txt2);font-size:14px;line-height:1.75;margin-bottom:28px;max-width:400px}
+.hero-btns{display:flex;gap:12px}
+.btn-prim{background:var(--n1);border:none;color:#fff;padding:11px 28px;border-radius:7px;font-size:14px;font-weight:500;cursor:pointer;transition:opacity .2s,transform .15s;font-family:'Inter',sans-serif}
+.btn-prim:hover{opacity:.85;transform:translateY(-1px)}
+.btn-sec{background:transparent;border:1px solid rgba(0,240,255,0.35);color:var(--n2);padding:11px 28px;border-radius:7px;font-size:14px;cursor:pointer;transition:background .2s;font-family:'Inter',sans-serif}
+.btn-sec:hover{background:rgba(0,240,255,0.08)}
+.hero-showcase{position:absolute;right:48px;top:50%;transform:translateY(-50%);display:flex;gap:14px;z-index:2}
+.showcase-card{background:var(--card);border:1px solid rgba(180,0,255,0.25);border-radius:12px;overflow:hidden;width:148px;box-shadow:0 0 30px rgba(180,0,255,0.15);cursor:pointer;transition:transform .2s,border-color .2s}
+.showcase-card:nth-child(2){transform:translateY(-16px)}
+.showcase-card:hover{transform:translateY(-4px) !important;border-color:rgba(0,240,255,0.4)}
+.showcase-thumb{width:100%;height:88px;display:flex;align-items:center;justify-content:center;font-size:30px}
+.showcase-info{padding:10px 12px}
+.showcase-name{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:12px;color:#fff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.showcase-price{font-size:12px;font-weight:600;color:var(--n4)}
+
+/* LAYOUT */
+.store-layout{display:flex;min-height:calc(100vh - 418px)}
+.sidebar{width:210px;background:var(--bg2);border-right:1px solid var(--border);padding:24px 0;flex-shrink:0}
+.sidebar-section{margin-bottom:28px;padding:0 18px}
+.sidebar-label{font-size:10px;font-weight:600;letter-spacing:2.5px;text-transform:uppercase;color:var(--txt3);margin-bottom:10px}
+.s-item{display:flex;align-items:center;gap:10px;padding:7px 10px;border-radius:6px;cursor:pointer;color:var(--txt2);font-size:13px;transition:color .2s,background .2s;margin-bottom:1px;border:none;background:none;width:100%;text-align:left;font-family:'Inter',sans-serif}
+.s-item:hover{color:var(--txt);background:rgba(255,255,255,0.04)}
+.s-item.active{color:var(--n2);background:rgba(0,240,255,0.07)}
+.s-item svg{width:15px;height:15px;flex-shrink:0;opacity:.7}
+.s-item.active svg{opacity:1}
+.s-badge{background:rgba(180,0,255,0.2);color:var(--n1);font-size:10px;font-weight:700;padding:1px 8px;border-radius:3px;margin-left:auto}
+.s-badge.hot{background:rgba(255,45,120,0.2);color:var(--n3)}
+
+.content{flex:1;padding:28px 32px 48px;min-width:0}
+.search-wrap{position:relative;margin-bottom:22px}
+.search-inp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:11px 16px 11px 42px;color:var(--txt);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.search-inp:focus{border-color:rgba(0,240,255,0.4)}
+.search-inp::placeholder{color:var(--txt3)}
+.search-ico{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--txt3);pointer-events:none}
+.search-ico svg{width:16px;height:16px}
+
+.promo-strip{background:var(--bg3);border:1px solid rgba(255,45,120,0.2);border-radius:10px;padding:18px 24px;margin-bottom:26px;display:flex;align-items:center;justify-content:space-between}
+.promo-left .pl{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--n3);margin-bottom:5px}
+.promo-left .pt{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:#fff}
+.promo-left .ps{font-size:13px;color:var(--txt2);margin-top:3px}
+.promo-badge{background:var(--n3);color:#fff;font-family:'Rajdhani',sans-serif;font-size:30px;font-weight:700;padding:10px 18px;border-radius:8px;line-height:1}
+
+.sec-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-title{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:20px;color:#fff;letter-spacing:1px}
+.sec-title span{color:var(--n2)}
+.see-all{background:none;border:none;color:var(--n1);font-size:13px;cursor:pointer;font-family:'Inter',sans-serif}
+.see-all:hover{color:var(--n2)}
+
+.chips{display:flex;gap:8px;margin-bottom:22px;flex-wrap:wrap}
+.chip{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);font-size:12px;padding:5px 16px;border-radius:20px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.chip:hover{border-color:rgba(0,240,255,0.3);color:var(--txt)}
+.chip.active{background:rgba(0,240,255,0.1);border-color:rgba(0,240,255,0.45);color:var(--n2)}
+
+.game-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(172px,1fr));gap:16px;margin-bottom:38px}
+.g-card{background:var(--card);border:1px solid var(--border);border-radius:10px;overflow:hidden;cursor:pointer;transition:transform .2s,border-color .2s,box-shadow .2s}
+.g-card:hover{transform:translateY(-4px);border-color:rgba(180,0,255,0.35);box-shadow:0 10px 28px rgba(180,0,255,0.13)}
+.g-thumb{width:100%;height:108px;display:flex;align-items:center;justify-content:center;font-size:38px}
+.g-body{padding:12px}
+.g-name{font-family:'Rajdhani',sans-serif;font-weight:600;font-size:14px;color:#fff;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.g-genre{font-size:11px;color:var(--txt2);margin-bottom:9px}
+.g-foot{display:flex;align-items:center;justify-content:space-between;gap:4px}
+.g-price{font-size:13px;font-weight:600;color:var(--n4)}
+.g-price.free{color:var(--n2)}
+.g-price.sale{color:var(--n3)}
+.g-buy{background:rgba(180,0,255,0.18);border:1px solid rgba(180,0,255,0.35);color:var(--n1);font-size:10px;padding:3px 9px;border-radius:4px;cursor:pointer;transition:background .2s;font-family:'Inter',sans-serif;white-space:nowrap}
+.g-buy:hover{background:rgba(180,0,255,0.38)}
+.g-buy.added{background:rgba(57,255,20,0.15);border-color:rgba(57,255,20,0.4);color:var(--n4)}
+.g-rating{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--txt2);margin-top:7px}
+.stars{color:#ffc600;font-size:10px}
+.sale-badge{background:rgba(255,45,120,0.18);color:var(--n3);font-size:10px;font-weight:600;padding:1px 5px;border-radius:3px}
+
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:18px;cursor:pointer;transition:border-color .2s,transform .2s}
+.feat-card:hover{border-color:rgba(0,240,255,0.3);transform:translateY(-2px)}
+.feat-emoji{font-size:28px;margin-bottom:10px}
+.feat-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:4px}
+.feat-desc{font-size:12px;color:var(--txt2);line-height:1.55;margin-bottom:12px}
+.feat-price{font-size:16px;font-weight:700;color:var(--n4)}
+.feat-price.free{color:var(--n2)}
+.empty-state{color:var(--txt2);font-size:14px;padding:32px 0;grid-column:1/-1;text-align:center}
+
+/* GAME PAGE */
+#page-game{background:var(--bg)}
+.back-btn{background:none;border:none;color:var(--txt2);font-size:13px;cursor:pointer;display:flex;align-items:center;gap:6px;padding:20px 48px 0;font-family:'Inter',sans-serif;transition:color .2s}
+.back-btn:hover{color:var(--n2)}
+.back-btn svg{width:16px;height:16px}
+.game-hero{position:relative;height:300px;overflow:hidden;display:flex;align-items:flex-end}
+.game-hero-bg{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:110px;opacity:.15;user-select:none}
+.game-hero-overlay{position:absolute;inset:0;background:linear-gradient(0deg,rgba(8,8,16,1) 0%,rgba(8,8,16,0.4) 60%,transparent 100%)}
+.game-hero-content{position:relative;z-index:2;padding:0 48px 28px;display:flex;align-items:flex-end;gap:24px;width:100%}
+.game-big-emoji{font-size:60px;filter:drop-shadow(0 0 20px rgba(0,240,255,0.4))}
+.game-hero-genre{font-size:10px;font-weight:600;letter-spacing:2px;text-transform:uppercase;color:var(--n2);margin-bottom:5px}
+.game-hero-title{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:40px;color:#fff;margin-bottom:7px}
+.game-hero-meta{display:flex;align-items:center;gap:14px;font-size:13px;color:var(--txt2);flex-wrap:wrap}
+.game-hero-stars{color:#ffc600}
+.score-pill{display:inline-block;padding:2px 10px;border-radius:3px;font-size:11px;font-weight:600}
+.score-pill.positive{background:rgba(57,255,20,0.1);color:var(--n4);border:1px solid rgba(57,255,20,0.25)}
+.score-pill.mixed{background:rgba(255,200,0,0.1);color:#ffc600;border:1px solid rgba(255,200,0,0.25)}
+.score-pill.negative{background:rgba(255,45,120,0.1);color:var(--n3);border:1px solid rgba(255,45,120,0.25)}
+
+.game-body-wrap{display:flex;gap:24px;padding:28px 48px 48px;max-width:1300px}
+.game-main{flex:1;min-width:0}
+.game-side{width:276px;flex-shrink:0}
+
+.block{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-bottom:18px}
+.block-title{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:var(--n2);margin-bottom:12px;letter-spacing:1px}
+.game-desc-text{font-size:14px;color:var(--txt2);line-height:1.75}
+
+.screenshots{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:18px}
+.screenshot{background:var(--bg3);border:1px solid var(--border);border-radius:8px;height:88px;display:flex;align-items:center;justify-content:center;font-size:26px;cursor:pointer;transition:border-color .2s}
+.screenshot:hover{border-color:var(--border2)}
+
+/* STEAM-STYLE SYSREQ */
+.req-tabs{display:flex;gap:0;margin-bottom:14px;border:1px solid var(--border);border-radius:6px;overflow:hidden;width:fit-content}
+.req-tab{background:none;border:none;color:var(--txt2);font-size:11px;font-weight:600;letter-spacing:1px;text-transform:uppercase;font-family:'Inter',sans-serif;padding:6px 18px;cursor:pointer;transition:all .2s}
+.req-tab.active{background:rgba(0,240,255,0.1);color:var(--n2)}
+.req-tab:not(:last-child){border-right:1px solid var(--border)}
+.req-table{width:100%;border-collapse:collapse}
+.req-table tr{border-bottom:1px solid rgba(255,255,255,0.04)}
+.req-table tr:last-child{border-bottom:none}
+.req-table td{padding:5px 0;font-size:13px;vertical-align:top}
+.req-table td:first-child{color:var(--txt3);width:140px;font-size:11px;padding-right:10px;white-space:nowrap;padding-top:7px}
+.req-table td:last-child{color:var(--txt);line-height:1.5}
+.req-os-note{font-size:11px;color:var(--txt3);margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+
+.review-item{border-bottom:1px solid var(--border);padding:12px 0}
+.review-item:last-child{border-bottom:none;padding-bottom:0}
+.review-header{display:flex;align-items:center;gap:10px;margin-bottom:5px}
+.review-avatar{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;background:rgba(180,0,255,0.2);color:var(--n1)}
+.review-name{font-size:13px;font-weight:500;color:var(--txt)}
+.review-rec{margin-left:auto;font-size:11px;color:var(--n4)}
+.review-text{font-size:13px;color:var(--txt2);line-height:1.6}
+.review-date{font-size:11px;color:var(--txt3);margin-top:3px}
+
+/* PURCHASE CARD */
+.purchase-card{background:var(--card);border:1px solid rgba(180,0,255,0.25);border-radius:12px;padding:20px;margin-bottom:14px;position:sticky;top:74px}
+.pc-score{font-size:12px;color:var(--txt2);margin-bottom:10px}
+.pc-score strong{color:var(--n4)}
+.pc-price-wrap{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:5px}
+.pc-discount{background:rgba(57,255,20,0.15);color:var(--n4);font-size:12px;font-weight:700;padding:3px 8px;border-radius:4px}
+.pc-orig{font-size:13px;color:var(--txt3);text-decoration:line-through}
+.pc-price{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#fff}
+.pc-price.free{color:var(--n2);font-size:24px}
+.pc-meta{font-size:12px;color:var(--txt2);margin-bottom:18px;line-height:1.7}
+.pc-btn{width:100%;background:var(--n1);border:none;color:#fff;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;transition:opacity .2s,transform .15s;font-family:'Rajdhani',sans-serif;letter-spacing:1px;margin-bottom:8px}
+.pc-btn:hover{opacity:.85;transform:translateY(-1px)}
+.pc-btn.added{background:rgba(57,255,20,0.15);color:var(--n4);border:1px solid rgba(57,255,20,0.35)}
+.pc-wishlist{width:100%;background:transparent;border:1px solid var(--border);color:var(--txt2);padding:9px;border-radius:8px;font-size:13px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif;margin-bottom:14px}
+.pc-wishlist:hover{border-color:var(--n3);color:var(--n3)}
+.pc-info-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--border)}
+.pc-info-row:last-child{border-bottom:none}
+.pc-info-row span:first-child{color:var(--txt3)}
+.pc-info-row span:last-child{color:var(--txt)}
+.pc-tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:12px}
+.pc-tag{background:var(--bg3);border:1px solid var(--border);color:var(--txt2);font-size:10px;padding:2px 9px;border-radius:4px}
+
+.ach-item{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)}
+.ach-item:last-child{border-bottom:none}
+.ach-icon{font-size:17px;width:26px;text-align:center}
+.ach-name{font-size:12px;font-weight:500;color:var(--txt)}
+.ach-desc{font-size:11px;color:var(--txt3)}
+
+/* CART */
+#page-cart{background:var(--bg);min-height:100vh}
+.cart-wrap{max-width:900px;margin:0 auto;padding:36px 24px}
+.cart-title{font-family:'Rajdhani',sans-serif;font-size:28px;font-weight:700;color:#fff;margin-bottom:28px;letter-spacing:1px}
+.cart-title span{color:var(--n2)}
+.cart-layout{display:flex;gap:24px;align-items:flex-start}
+.cart-items{flex:1;min-width:0}
+.cart-item{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px;display:flex;align-items:center;gap:16px;transition:border-color .2s}
+.cart-item:hover{border-color:rgba(180,0,255,0.25)}
+.cart-emoji{font-size:32px;width:52px;height:52px;background:var(--bg3);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cart-info{flex:1;min-width:0}
+.cart-item-name{font-family:'Rajdhani',sans-serif;font-size:15px;font-weight:600;color:#fff;margin-bottom:2px}
+.cart-item-sub{font-size:12px;color:var(--txt2)}
+.cart-item-price{font-family:'Rajdhani',sans-serif;font-size:18px;font-weight:700;color:var(--n4);white-space:nowrap}
+.cart-item-price.free{color:var(--n2)}
+.cart-remove{background:none;border:none;color:var(--txt3);cursor:pointer;padding:6px;border-radius:6px;transition:color .2s,background .2s}
+.cart-remove:hover{color:var(--n3);background:rgba(255,45,120,0.1)}
+.cart-remove svg{width:17px;height:17px}
+.cart-empty{text-align:center;padding:60px 0;color:var(--txt2)}
+.cart-empty-icon{font-size:52px;margin-bottom:14px}
+.cart-empty p{font-size:15px;margin-bottom:20px}
+.order-card{background:var(--card);border:1px solid rgba(180,0,255,0.2);border-radius:12px;padding:20px;width:256px;flex-shrink:0;position:sticky;top:74px}
+.order-title{font-family:'Rajdhani',sans-serif;font-size:16px;font-weight:600;color:#fff;margin-bottom:14px;letter-spacing:1px}
+.order-row{display:flex;justify-content:space-between;font-size:13px;color:var(--txt2);margin-bottom:9px}
+.order-total{display:flex;justify-content:space-between;font-size:18px;font-weight:700;color:#fff;border-top:1px solid var(--border);padding-top:12px;margin-top:4px;margin-bottom:16px;font-family:'Rajdhani',sans-serif}
+.order-total span:last-child{color:var(--n4)}
+.order-btn{width:100%;background:var(--n1);border:none;color:#fff;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:1px;transition:opacity .2s}
+.order-btn:hover{opacity:.85}
+.order-promo{display:flex;gap:8px;margin-top:10px}
+.order-promo input{flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:6px;padding:7px 10px;color:var(--txt);font-size:13px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.order-promo input:focus{border-color:var(--border2)}
+.order-promo input::placeholder{color:var(--txt3)}
+.order-promo button{background:rgba(0,240,255,0.12);border:1px solid var(--border2);color:var(--n2);padding:7px 12px;border-radius:6px;font-size:13px;cursor:pointer;font-family:'Inter',sans-serif}
+.order-success{background:var(--card);border:1px solid rgba(57,255,20,0.25);border-radius:12px;padding:32px;text-align:center}
+.os-icon{font-size:50px;margin-bottom:14px}
+.os-title{font-family:'Rajdhani',sans-serif;font-size:24px;font-weight:700;color:var(--n4);margin-bottom:8px}
+.os-sub{color:var(--txt2);font-size:14px;line-height:1.7}
+.os-btn{background:rgba(0,240,255,0.12);border:1px solid var(--border2);color:var(--n2);padding:9px 22px;border-radius:7px;font-size:13px;cursor:pointer;margin-top:18px;font-family:'Inter',sans-serif;transition:background .2s}
+.os-btn:hover{background:rgba(0,240,255,0.22)}
+
+/* AUTH */
+#page-auth{background:var(--bg);min-height:100vh;display:flex;align-items:center;justify-content:center;padding:40px 20px}
+.auth-bg{position:fixed;inset:0;background:radial-gradient(ellipse 60% 60% at 30% 40%,rgba(180,0,255,0.12) 0%,transparent 60%),radial-gradient(ellipse 50% 50% at 70% 60%,rgba(0,240,255,0.08) 0%,transparent 60%);pointer-events:none}
+.auth-box{position:relative;z-index:2;background:var(--card);border:1px solid rgba(180,0,255,0.2);border-radius:16px;padding:36px;width:100%;max-width:420px}
+.auth-logo{font-family:'Rajdhani',sans-serif;font-weight:700;font-size:26px;color:#fff;letter-spacing:3px;text-align:center;margin-bottom:5px}
+.auth-logo span{color:var(--n2)}
+.auth-sub{text-align:center;color:var(--txt2);font-size:13px;margin-bottom:26px}
+.auth-tabs{display:flex;background:var(--bg3);border-radius:8px;padding:3px;margin-bottom:22px}
+.auth-tab{flex:1;padding:7px;border:none;background:none;color:var(--txt2);font-size:13px;border-radius:6px;cursor:pointer;transition:all .2s;font-family:'Inter',sans-serif}
+.auth-tab.active{background:var(--bg4);color:var(--n2)}
+.form-group{margin-bottom:14px}
+.form-label{font-size:12px;color:var(--txt2);margin-bottom:5px;display:block}
+.form-inp{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--txt);font-size:14px;font-family:'Inter',sans-serif;outline:none;transition:border-color .2s}
+.form-inp:focus{border-color:rgba(0,240,255,0.4)}
+.form-inp::placeholder{color:var(--txt3)}
+.form-submit{width:100%;background:var(--n1);border:none;color:#fff;padding:12px;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'Rajdhani',sans-serif;letter-spacing:1px;margin-top:6px;transition:opacity .2s}
+.form-submit:hover{opacity:.85}
+.form-divider{text-align:center;color:var(--txt3);font-size:12px;margin:16px 0;position:relative}
+.form-divider::before,.form-divider::after{content:'';position:absolute;top:50%;width:40%;height:1px;background:var(--border)}
+.form-divider::before{left:0}.form-divider::after{right:0}
+.oauth-btn{width:100%;background:var(--bg3);border:1px solid var(--border);color:var(--txt);padding:9px;border-radius:8px;font-size:13px;cursor:pointer;transition:border-color .2s;font-family:'Inter',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:8px}
+.oauth-btn:hover{border-color:var(--border2);color:var(--n2)}
+.auth-footer{text-align:center;font-size:12px;color:var(--txt3);margin-top:18px}
+.auth-footer a{color:var(--n1);cursor:pointer}
+.auth-footer a:hover{text-decoration:underline}
+.benefit-row{display:flex;align-items:center;gap:10px;margin-bottom:9px;font-size:13px;color:var(--txt2)}
+.benefit-icon{color:var(--n4);width:16px;text-align:center}
+.auth-benefits{margin-top:18px;border-top:1px solid var(--border);padding-top:18px}
+.success-screen{display:none;text-align:center;padding:36px 0}
+.success-screen.show{display:block}
+.success-icon{font-size:52px;margin-bottom:14px}
+.success-title{font-family:'Rajdhani',sans-serif;font-size:22px;font-weight:700;color:var(--n4);margin-bottom:7px}
+.success-sub{color:var(--txt2);font-size:14px}
+
+/* TOAST */
+#toast{position:fixed;bottom:28px;right:28px;background:var(--bg4);border:1px solid rgba(57,255,20,0.35);color:var(--n4);padding:12px 20px;border-radius:9px;font-size:13px;opacity:0;transform:translateY(12px);transition:all .3s;z-index:9999;pointer-events:none;max-width:300px;line-height:1.5}
+#toast.show{opacity:1;transform:translateY(0)}
+#toast.error{border-color:rgba(255,45,120,0.4);color:var(--n3)}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo" onclick="goPage('store')">VLEZ<span> STORE</span><small>GAME MARKET</small></div>
+  <div class="nav-links">
+    <button class="nav-link active" id="nl-store" onclick="goPage('store')">Магазин</button>
+    <button class="nav-link" onclick="setChip('Новинки',null)">Новинки</button>
+    <button class="nav-link" onclick="setChip('Sale',null)">Скидки</button>
+    <button class="nav-link" onclick="setChip('Бесплатно',null)">Бесплатно</button>
+  </div>
+  <div class="nav-right">
+    <button class="nav-cart" onclick="goPage('cart')">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      Корзина <span class="cart-badge" id="cart-count">0</span>
+    </button>
+    <div id="nav-auth-area"><button class="nav-login" onclick="goPage('auth')">Войти</button></div>
+  </div>
+</nav>
+
+<!-- STORE -->
+<div class="page active" id="page-store">
+  <div class="hero">
+    <div class="hero-bg"></div><div class="hero-grid"></div>
+    <div class="hero-content">
+      <div class="hero-eyebrow">⚡ Игры из Steam</div>
+      <h1 class="hero-title">Твой неоновый<br><em>магазин</em></h1>
+      <p class="hero-desc">Лучшие игры со Steam. Реальные цены. Мгновенная активация.</p>
+      <div class="hero-btns">
+        <button class="btn-prim" onclick="openGame(0)">Хит недели</button>
+        <button class="btn-sec" onclick="document.querySelector('.store-layout').scrollIntoView({behavior:'smooth'})">Весь каталог</button>
+      </div>
+    </div>
+    <div class="hero-showcase" id="hero-showcase"></div>
+  </div>
+
+  <div class="store-layout">
+    <aside class="sidebar">
+      <div class="sidebar-section">
+        <div class="sidebar-label">Разделы</div>
+        <button class="s-item active" onclick="setSidebar('Все',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Все игры
+        </button>
+        <button class="s-item" onclick="setSidebar('Новинки',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>Новинки <span class="s-badge">9</span>
+        </button>
+        <button class="s-item" onclick="setSidebar('Sale',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Скидки <span class="s-badge hot">-80%</span>
+        </button>
+        <button class="s-item" onclick="setSidebar('Бесплатно',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Бесплатно
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Жанры</div>
+        <button class="s-item" onclick="setSidebar('Экшен',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Экшен
+        </button>
+        <button class="s-item" onclick="setSidebar('RPG',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M8.56 2.75c4.37 6.03 6.02 9.42 8.03 17.72m2.54-15.38c-3.72 4.35-8.94 5.66-16.88 5.85m19.5 1.9c-3.5-.93-6.63-.82-8.94 0-2.58.92-5.01 2.86-7.44 6.32"/></svg>RPG
+        </button>
+        <button class="s-item" onclick="setSidebar('Стратегия',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>Стратегия
+        </button>
+        <button class="s-item" onclick="setSidebar('Инди',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>Инди
+        </button>
+        <button class="s-item" onclick="setSidebar('Симулятор',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2zm0 0v20M2 12h20"/></svg>Симулятор
+        </button>
+        <button class="s-item" onclick="setSidebar('Хоррор',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 100 20A10 10 0 0012 2z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>Хоррор
+        </button>
+      </div>
+      <div class="sidebar-section">
+        <div class="sidebar-label">Цена</div>
+        <button class="s-item" onclick="setSidebar('До 500',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>До 500 ₽
+        </button>
+        <button class="s-item" onclick="setSidebar('До 2000',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>До 2000 ₽
+        </button>
+        <button class="s-item" onclick="setSidebar('Бесплатно',this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>Бесплатно
+        </button>
+      </div>
+    </aside>
+
+    <div class="content">
+      <div class="search-wrap">
+        <div class="search-ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>
+        <input class="search-inp" type="text" id="search" placeholder="Поиск по названию, жанру, разработчику..." oninput="renderGames()">
+      </div>
+      <div class="promo-strip">
+        <div class="promo-left">
+          <div class="pl">🔥 Летняя распродажа</div>
+          <div class="pt">Скидки до 80% на лучшие игры</div>
+          <div class="ps">Промокод VLEZ2024 — доп. −10% на всё</div>
+        </div>
+        <div class="promo-badge">-80%</div>
+      </div>
+      <div class="sec-head">
+        <div class="sec-title" id="sec-title">Все <span>игры</span></div>
+        <button class="see-all" onclick="setChip('Все',null)">Показать все →</button>
+      </div>
+      <div class="chips" id="chips">
+        <button class="chip active" onclick="setChip('Все',this)">Все</button>
+        <button class="chip" onclick="setChip('Новинки',this)">Новинки 2025</button>
+        <button class="chip" onclick="setChip('Топ',this)">Топ продаж</button>
+        <button class="chip" onclick="setChip('Sale',this)">Скидки</button>
+        <button class="chip" onclick="setChip('Бесплатно',this)">Бесплатно</button>
+        <button class="chip" onclick="setChip('RPG',this)">RPG</button>
+        <button class="chip" onclick="setChip('Экшен',this)">Экшен</button>
+        <button class="chip" onclick="setChip('Инди',this)">Инди</button>
+      </div>
+      <div class="game-grid" id="game-grid"></div>
+      <div class="sec-head"><div class="sec-title">Рекомендуем <span>сегодня</span></div></div>
+      <div class="feat-grid" id="feat-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- GAME PAGE -->
+<div class="page" id="page-game">
+  <button class="back-btn" onclick="goPage('store')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    Назад в магазин
+  </button>
+  <div id="game-hero-wrap"></div>
+  <div class="game-body-wrap">
+    <div class="game-main" id="game-main"></div>
+    <div class="game-side" id="game-side"></div>
+  </div>
+</div>
+
+<!-- CART -->
+<div class="page" id="page-cart">
+  <div class="cart-wrap">
+    <div class="cart-title">Ваша <span>корзина</span></div>
+    <div id="cart-content"></div>
+  </div>
+</div>
+
+<!-- AUTH -->
+<div class="page" id="page-auth">
+  <div class="auth-bg"></div>
+  <div class="auth-box">
+    <div class="auth-logo">VLEZ<span> STORE</span></div>
+    <div class="auth-sub">Лучшие игры. Один аккаунт.</div>
+    <div class="auth-tabs">
+      <button class="auth-tab active" id="tab-login" onclick="switchAuthTab('login')">Войти</button>
+      <button class="auth-tab" id="tab-reg" onclick="switchAuthTab('reg')">Регистрация</button>
+    </div>
+    <div id="auth-form-wrap"></div>
+    <div class="success-screen" id="auth-success">
+      <div class="success-icon">🎮</div>
+      <div class="success-title">Добро пожаловать!</div>
+      <div class="success-sub">Аккаунт создан. Приятной игры!</div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const GAMES=[
+  {id:0,name:'Cyberpunk 2077',genre:'RPG',tag:['Топ','Sale'],price:1299,orig:3199,emoji:'🌆',
+   color:'linear-gradient(135deg,#0a001a,#1a0033,#001015)',
+   stars:4.7,reviews:620000,score:'В основном положительные',scoreType:'positive',
+   dev:'CD Projekt RED',pub:'CD Projekt',year:'17 сен 2020',
+   desc:'Cyberpunk 2077 — ролевой экшен от первого лица, действие которого разворачивается в мегаполисе будущего Найт-Сити. Играй за наёмника Ви, рискующего жизнью ради уникального импланта — ключа к бессмертию. Пройди этот мир как хочешь: взламывай системы, громи врагов силой или договаривайся. С дополнением Phantom Liberty игра получила переработанную систему прокачки и новый огромный район.',
+   tags:['Открытый мир','Киберпанк','Экшен','Атмосферная','Одиночная'],
+   screens:['🌆','🔫','🚗','💊','🌃','⚡'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i7-6700K / AMD Ryzen 5 1600',ram:'12 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 6 ГБ / AMD RX 5500 XT 8 ГБ',dx:'DirectX 12',disk:'70 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-12700 / AMD Ryzen 7 7800X3D',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2060 SUPER / AMD RX 5700 XT',dx:'DirectX 12',disk:'70 ГБ SSD'}
+   }},
+  {id:1,name:'Elden Ring',genre:'RPG',tag:['Топ','Sale'],price:1999,orig:3499,emoji:'⚔️',
+   color:'linear-gradient(135deg,#0d0800,#1a1000,#050300)',
+   stars:4.9,reviews:890000,score:'Крайне положительные',scoreType:'positive',
+   dev:'FromSoftware',pub:'Bandai Namco',year:'25 фев 2022',
+   desc:'Elden Ring — масштабная RPG в открытом мире, созданная FromSoftware в сотрудничестве с Джорджем Р. Р. Мартином. Ты — Беззаровый, призванный восстановить Кольцо Элден и стать повелителем эпохи Безвремья. Одна из лучших игр в истории по мнению критиков. Лауреат Game of the Year 2022 по версии более 100 изданий.',
+   tags:['Souls-like','Открытый мир','Фэнтези','Сложная','Одиночная'],
+   screens:['⚔️','🏰','🌙','🐉','💀','🔥'],
+   req:{
+     min:{os:'Windows 10/11 64-bit',cpu:'Intel Core i5-8400 / AMD Ryzen 3 3300X',ram:'12 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 3 ГБ / AMD RX 580 4 ГБ',dx:'DirectX 12',disk:'60 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-8700K / AMD Ryzen 5 3600X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA GTX 1070 8 ГБ / AMD RX Vega 56 8 ГБ',dx:'DirectX 12',disk:'60 ГБ SSD'}
+   }},
+  {id:2,name:'Black Myth: Wukong',genre:'Экшен',tag:['Топ','Новинки'],price:3299,orig:3299,emoji:'🐒',
+   color:'linear-gradient(135deg,#001a00,#003320,#0a1500)',
+   stars:4.8,reviews:300000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Game Science',pub:'Game Science',year:'20 авг 2024',
+   desc:'Игра года 2024 по версии Steam. Экшен от третьего лица по мотивам китайской классики "Путешествие на Запад". Сыграй за Избранного — потомка Сунь Укуня — в его пути через мифологический Китай. Потрясающая графика на Unreal Engine 5, глубокая боевая система с 72 трансформациями и уникальными способностями.',
+   tags:['Souls-like','Мифология','Красивая','Одиночная','Экшен'],
+   screens:['🐒','🌿','⚡','🏯','🌊','🔱'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i7-9700 / AMD Ryzen 5 5500',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2060 / AMD RX 5700 XT (8 ГБ VRAM)',dx:'DirectX 12',disk:'130 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-9700 / AMD Ryzen 5 5500',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2080 Ti / AMD RX 6800 XT (10 ГБ VRAM)',dx:'DirectX 12',disk:'130 ГБ SSD'}
+   }},
+  {id:3,name:"Baldur's Gate 3",genre:'RPG',tag:['Топ','Sale'],price:2499,orig:3999,emoji:'🧙',
+   color:'linear-gradient(135deg,#0d001a,#1a0030,#05000a)',
+   stars:4.9,reviews:750000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Larian Studios',pub:'Larian Studios',year:'3 авг 2023',
+   desc:"Лучшая RPG десятилетия. Брошенные в мир D&D, ты и твои компаньоны заражены паразитом иллитидов. Более 100 часов основного сюжета, кооператив на 4 игрока, тысячи уникальных решений и последствий. Лауреат Game of the Year 2023 практически по всем номинациям.",
+   tags:['D&D','Кооператив','Пошаговая','Открытый мир','Сюжет'],
+   screens:['🧙','🐉','⚔️','📜','🌲','✨'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i7-8700K / AMD Ryzen 5 3600',ram:'16 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 6 ГБ / AMD RX 580',dx:'DirectX 11',disk:'150 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-8700K / AMD Ryzen 5 3600',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2060 SUPER / AMD RX 5700 XT',dx:'DirectX 11',disk:'150 ГБ SSD'}
+   }},
+  {id:4,name:'Counter-Strike 2',genre:'Экшен',tag:['Топ','Бесплатно'],price:0,orig:0,emoji:'🎯',
+   color:'linear-gradient(135deg,#001a05,#003310,#000d02)',
+   stars:3.8,reviews:1500000,score:'Смешанные',scoreType:'mixed',
+   dev:'Valve',pub:'Valve',year:'27 сен 2023',
+   desc:'Обновлённый CS2 на движке Source 2. Новая система дыма с объёмной физикой, улучшенная анимация, переработанные карты и новый соревновательный режим Premier. Самый популярный шутер на PC с рейтингом на основе сезонов.',
+   tags:['Шутер','Мультиплеер','Бесплатно','Соревновательный','FPS'],
+   screens:['🎯','💥','🗺️','🔫','🧨','🏆'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i5 4-го поколения / AMD FX-6300',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1050 Ti / AMD RX 470',dx:'DirectX 11',disk:'85 ГБ'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-9700K / AMD Ryzen 7 3700X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2070 / AMD RX 5700 XT',dx:'DirectX 12',disk:'85 ГБ SSD'}
+   }},
+  {id:5,name:'Helldivers 2',genre:'Экшен',tag:['Топ','Новинки'],price:2499,orig:2499,emoji:'🪖',
+   color:'linear-gradient(135deg,#1a1000,#332000,#0d0800)',
+   stars:4.6,reviews:430000,score:'В основном положительные',scoreType:'positive',
+   dev:'Arrowhead Game Studios',pub:'Sony Interactive',year:'8 фев 2024',
+   desc:'Кооперативный шутер на 4 игрока во имя Управляемой Демократии. Уничтожай орды инсектоидов и автоматонов на разных планетах. Вызывай стратагемы — мощные поддерживающие удары с орбиты. Дружественный огонь всегда включён.',
+   tags:['Кооператив','Шутер','PvE','Юмор','Мультиплеер'],
+   screens:['🪖','💥','🔫','👾','🌍','🚀'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i7-9700K / AMD Ryzen 7 3700X',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1080 Ti / AMD RX 6700 XT',dx:'DirectX 12',disk:'100 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-9700K / AMD Ryzen 7 3700X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2080 / AMD RX 6800 XT',dx:'DirectX 12',disk:'100 ГБ SSD'}
+   }},
+  {id:6,name:'Clair Obscur: Expedition 33',genre:'RPG',tag:['Новинки','Топ'],price:3499,orig:3499,emoji:'🎨',
+   color:'linear-gradient(135deg,#0a0015,#150025,#03000a)',
+   stars:4.9,reviews:268000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Sandfall Interactive',pub:'Kepler Interactive',year:'24 апр 2025',
+   desc:'Один из лучших RPG 2025 года. Пошаговые бои с элементами реального времени в сюрреалистичном французском сеттинге. Экспедиция 33 отправляется остановить Художницу, которая ежегодно стирает людей. Захватывающий сюжет, великолепный саундтрек.',
+   tags:['Пошаговая','Сюжет','Фэнтези','Одиночная','Атмосферная'],
+   screens:['🎨','✨','⚔️','🌸','🎭','💫'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i5-8600K / AMD Ryzen 5 3600',ram:'12 ГБ ОЗУ',gpu:'NVIDIA GTX 1070 / AMD RX 5700',dx:'DirectX 12',disk:'35 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-10700K / AMD Ryzen 7 5800X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2080 / AMD RX 6800',dx:'DirectX 12',disk:'35 ГБ SSD'}
+   }},
+  {id:7,name:'Hades II',genre:'Инди',tag:['Новинки','Топ'],price:1349,orig:1349,emoji:'🔱',
+   color:'linear-gradient(135deg,#1a0008,#330010,#0a0003)',
+   stars:4.9,reviews:95000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Supergiant Games',pub:'Supergiant Games',year:'6 мая 2024 (EA)',
+   desc:'Долгожданный сиквел культового рогалика. Играй за Мелиною — сестру Загрея — в её пути сквозь мифологический подземный мир. Больше оружия, боссов, персонажей и ещё более глубокая система прокачки с Арканами.',
+   tags:['Roguelike','Мифология','Экшен','Инди','Одиночная'],
+   screens:['🔱','⚡','🌹','💀','🎵','🌊'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i5-4590 / AMD FX-8350',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1050 Ti / AMD RX 570',dx:'DirectX 11',disk:'15 ГБ'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-4770K / AMD Ryzen 5 1600',ram:'16 ГБ ОЗУ',gpu:'NVIDIA GTX 1080 / AMD RX Vega 64',dx:'DirectX 11',disk:'15 ГБ SSD'}
+   }},
+  {id:8,name:'R.E.P.O.',genre:'Хоррор',tag:['Новинки','Топ'],price:749,orig:749,emoji:'👻',
+   color:'linear-gradient(135deg,#0a0a00,#1a1800,#050500)',
+   stars:4.9,reviews:398000,score:'Крайне положительные',scoreType:'positive',
+   dev:'semiwork',pub:'semiwork',year:'26 фев 2025',
+   desc:'Хоррор-кооператив о роботах-мародёрах. Проникай в жуткие здания, собирай ценные предметы и сбегай, пока тебя не нашли монстры. Реалистичная физика объектов порождает хаотичный и незабываемо смешной кооп.',
+   tags:['Хоррор','Кооператив','Инди','Физика','Мультиплеер'],
+   screens:['👻','🤖','📦','🏚️','🔦','💀'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i5-8600K / AMD Ryzen 5 3600',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 6 ГБ / AMD RX 580 8 ГБ',dx:'DirectX 12',disk:'6 ГБ'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-10700K / AMD Ryzen 7 5800X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2070 / AMD RX 6700 XT',dx:'DirectX 12',disk:'6 ГБ SSD'}
+   }},
+  {id:9,name:'Schedule I',genre:'Симулятор',tag:['Новинки','Топ'],price:1499,orig:1499,emoji:'💊',
+   color:'linear-gradient(135deg,#001500,#002800,#000a00)',
+   stars:4.9,reviews:301000,score:'Крайне положительные',scoreType:'positive',
+   dev:'TVGS',pub:'TVGS',year:'24 мар 2025',
+   desc:'Самая продаваемая инди-игра первого квартала 2025 года. Начинаешь бездомным в маленьком городке и строишь нелегальную империю. Производи продукт, распределяй через дилеров, уклоняйся от полиции. Глубокая экономика и открытый мир.',
+   tags:['Криминал','Открытый мир','Инди','Одиночная','Симулятор'],
+   screens:['💊','💰','🏪','🚗','🌆','📦'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i5-8500 / AMD Ryzen 5 2600',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 6 ГБ / AMD RX 580',dx:'DirectX 11',disk:'8 ГБ'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-10700K / AMD Ryzen 7 3700X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2070 / AMD RX 6700 XT',dx:'DirectX 11',disk:'8 ГБ SSD'}
+   }},
+  {id:10,name:'PEAK',genre:'Экшен',tag:['Новинки','Топ'],price:599,orig:599,emoji:'🏔️',
+   color:'linear-gradient(135deg,#001020,#002040,#000510)',
+   stars:4.9,reviews:327000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Aggro Crab',pub:'Landfall',year:'8 мая 2025',
+   desc:'Кооперативный экшен о восхождении на гору. Карабкайся с друзьями, пережив лавины, морозы и гравитацию. Каждое падение — катастрофа. Каждая вершина — триумф. Огромный мем-хит 2025 с миллионами одновременных игроков.',
+   tags:['Кооператив','Выживание','Инди','Смешная','Мультиплеер'],
+   screens:['🏔️','🧗','❄️','🌨️','⛏️','🏕️'],
+   req:{
+     min:{os:'Windows 10 64-bit',cpu:'Intel Core i5-8400 / AMD Ryzen 5 2600',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 6 ГБ / AMD RX 580',dx:'DirectX 11',disk:'3 ГБ'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-8700K / AMD Ryzen 7 3700X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2070 / AMD RX 6800',dx:'DirectX 11',disk:'3 ГБ SSD'}
+   }},
+  {id:11,name:'Dota 2',genre:'Стратегия',tag:['Топ','Бесплатно'],price:0,orig:0,emoji:'🛡️',
+   color:'linear-gradient(135deg,#0a0005,#15000a,#030002)',
+   stars:4.5,reviews:1800000,score:'В основном положительные',scoreType:'positive',
+   dev:'Valve',pub:'Valve',year:'9 июл 2013',
+   desc:'Легендарная MOBA с миллионами игроков. 120+ героев, бесконечная стратегическая глубина. Ежегодный турнир The International с призовым фондом свыше 40 млн долларов. Самая сложная и самая награждающая командная игра.',
+   tags:['MOBA','Мультиплеер','Бесплатно','Соревновательный','Стратегия'],
+   screens:['🛡️','⚔️','🌳','💥','🏆','🌟'],
+   req:{
+     min:{os:'Windows 7 и выше',cpu:'Intel Core 2 Duo E7400 2.80 ГГц',ram:'4 ГБ ОЗУ',gpu:'NVIDIA GeForce 8600 / ATI Radeon HD 2600',dx:'DirectX 9.0c',disk:'15 ГБ'},
+     rec:{os:'Windows 10 64-bit',cpu:'Intel Core i5-6600K / AMD Ryzen 5 2600',ram:'8 ГБ ОЗУ',gpu:'NVIDIA GTX 1060 / AMD RX 580',dx:'DirectX 11',disk:'15 ГБ'}
+   }},
+  {id:12,name:'Split Fiction',genre:'Экшен',tag:['Новинки','Топ'],price:3499,orig:3499,emoji:'🚀',
+   color:'linear-gradient(135deg,#001020,#001a33,#000510)',
+   stars:4.9,reviews:121000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Hazelight Studios',pub:'Electronic Arts',year:'6 мар 2025',
+   desc:'Кооперативный экшен от создателей It Takes Two. Два игрока — два мира: научная фантастика и фэнтези. Бесконечная изобретательность игрового дизайна, каждый уровень — совершенно новый жанр. Игра обязательна для прохождения с другом.',
+   tags:['Co-op','Приключение','Платформер','Экшен','Мультиплеер'],
+   screens:['🚀','🌌','🐉','⚡','🔮','💫'],
+   req:{
+     min:{os:'Windows 10/11 64-bit',cpu:'Intel Core i5-6600K / AMD Ryzen 5 1600',ram:'12 ГБ ОЗУ',gpu:'NVIDIA GTX 970 / AMD RX 480',dx:'DirectX 12',disk:'50 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i7-8700 / AMD Ryzen 5 3600X',ram:'16 ГБ ОЗУ',gpu:'NVIDIA RTX 2060 / AMD RX 5700 XT',dx:'DirectX 12',disk:'50 ГБ SSD'}
+   }},
+  {id:13,name:'DELTARUNE',genre:'Инди',tag:['Новинки','Sale'],price:999,orig:1799,emoji:'❤️',
+   color:'linear-gradient(135deg,#0a0005,#15000f,#030002)',
+   stars:4.9,reviews:100000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Toby Fox',pub:'Toby Fox',year:'2025',
+   desc:'Финальная версия DELTARUNE от создателя Undertale. Кирби и его друзья попадают в Тёмные миры — измерения, где игрушки и мечты оживают. RPG с уникальной боевой системой пощады, незабываемыми персонажами и шикарным саундтреком.',
+   tags:['Инди','RPG','Пошаговая','Сюжет','Пиксельная'],
+   screens:['❤️','⚔️','🌀','🎵','💙','🌸'],
+   req:{
+     min:{os:'Windows 7 и выше',cpu:'1.0 ГГц процессор',ram:'2 ГБ ОЗУ',gpu:'512 МБ видеопамяти',dx:'DirectX 9.0',disk:'3 ГБ'},
+     rec:{os:'Windows 10 64-bit',cpu:'Intel Core i3 / AMD Ryzen 3',ram:'4 ГБ ОЗУ',gpu:'Любая современная видеокарта',dx:'DirectX 11',disk:'3 ГБ'}
+   }},
+  {id:14,name:'Palworld',genre:'Симулятор',tag:['Новинки','Sale'],price:799,orig:1999,emoji:'🐾',
+   color:'linear-gradient(135deg,#001510,#002820,#000a05)',
+   stars:4.1,reviews:1100000,score:'В основном положительные',scoreType:'positive',
+   dev:'Pocketpair',pub:'Pocketpair',year:'19 янв 2024',
+   desc:'Survival-игра с существами Пал. Строй базы, исследуй мир, разводи и используй Палов для работы и сражений. Сенсационный старт: 30 млн копий за первый месяц. Активно обновляется — добавлены острова, рейды и PvP.',
+   tags:['Выживание','Открытый мир','Кооператив','Строительство','Экшен'],
+   screens:['🐾','🏗️','⚔️','🌲','🔫','🏝️'],
+   req:{
+     min:{os:'Windows 10/11 64-bit',cpu:'Intel Core i5-8400 / AMD Ryzen 5 3600',ram:'16 ГБ ОЗУ',gpu:'NVIDIA GTX 1050 Ti',dx:'DirectX 11',disk:'40 ГБ SSD'},
+     rec:{os:'Windows 10/11 64-bit',cpu:'Intel Core i9-9900K / AMD Ryzen 9 3900X',ram:'32 ГБ ОЗУ',gpu:'NVIDIA RTX 2070 / AMD RX 6800',dx:'DirectX 12',disk:'40 ГБ SSD'}
+   }},
+  {id:15,name:'Terraria',genre:'Инди',tag:['Топ','Sale'],price:199,orig:499,emoji:'⛏️',
+   color:'linear-gradient(135deg,#001500,#002500,#000800)',
+   stars:4.9,reviews:1200000,score:'Крайне положительные',scoreType:'positive',
+   dev:'Re-Logic',pub:'Re-Logic',year:'16 мая 2011',
+   desc:'Культовый 2D-сэндбокс с 30+ боссами и бесконечным контентом. Строй, копай, сражайся — в любом порядке. Одна из самых любимых игр в истории Steam. Регулярно получает бесплатные обновления уже более 13 лет.',
+   tags:['Сэндбокс','Выживание','2D','Строительство','Инди'],
+   screens:['⛏️','🏠','🌴','💎','👹','🌟'],
+   req:{
+     min:{os:'Windows XP / Vista / 7 / 8 / 10 / 11',cpu:'1.6 ГГц процессор',ram:'512 МБ ОЗУ',gpu:'128 МБ видеопамяти',dx:'DirectX 9.0c',disk:'200 МБ'},
+     rec:{os:'Windows 7 / 8 / 10 / 11',cpu:'Intel Core 2 Duo / AMD Dual Core',ram:'4 ГБ ОЗУ',gpu:'512 МБ видеопамяти',dx:'DirectX 9.0c',disk:'200 МБ'}
+   }},
+];
+
+const FEATURED=[GAMES[2],GAMES[3],GAMES[6]];
+let cart=[],inCartSet=new Set(),currentFilter='Все',currentUser=null,authTab='login';
+
+function goPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l=>l.classList.remove('active'));
+  const nl=document.getElementById('nl-'+id);if(nl)nl.classList.add('active');
+  window.scrollTo(0,0);
+  if(id==='cart')renderCart();
+}
+
+function getFiltered(){
+  const q=document.getElementById('search').value.toLowerCase();
+  return GAMES.filter(g=>{
+    const f=currentFilter;
+    const ok=f==='Все'||g.tag.includes(f)||g.genre===f
+      ||(f==='До 500'&&g.price>0&&g.price<=500)
+      ||(f==='До 2000'&&g.price>0&&g.price<=2000);
+    return ok&&(!q||g.name.toLowerCase().includes(q)||g.genre.toLowerCase().includes(q)||g.dev.toLowerCase().includes(q));
+  });
+}
+
+function renderGames(){
+  const grid=document.getElementById('game-grid');
+  const games=getFiltered();
+  if(!games.length){grid.innerHTML='<div class="empty-state">🌑 Ничего не найдено</div>';return;}
+  grid.innerHTML=games.map(g=>{
+    const isSale=g.price<g.orig&&g.orig>0,isFree=g.price===0;
+    const pClass=isFree?'free':isSale?'sale':'';
+    const pLabel=isFree?'Бесплатно':isSale
+      ?`<span class="sale-badge">-${Math.round((1-g.price/g.orig)*100)}%</span> ${g.price}₽`
+      :`${g.price}₽`;
+    const inC=inCartSet.has(g.id);
+    return `<div class="g-card" onclick="openGame(${g.id})">
+      <div class="g-thumb" style="background:${g.color}">${g.emoji}</div>
+      <div class="g-body">
+        <div class="g-name" title="${g.name}">${g.name}</div>
+        <div class="g-genre">${g.genre} · ${g.year.slice(-4)}</div>
+        <div class="g-foot">
+          <span class="g-price ${pClass}">${pLabel}</span>
+          <button class="g-buy${inC?' added':''}" onclick="event.stopPropagation();addToCart(${g.id})">${inC?'✓':'+ В корзину'}</button>
+        </div>
+        <div class="g-rating"><span class="stars">${'★'.repeat(Math.round(g.stars))}${'☆'.repeat(5-Math.round(g.stars))}</span> ${g.stars}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderFeatured(){
+  document.getElementById('feat-grid').innerHTML=FEATURED.map(g=>`
+    <div class="feat-card" onclick="openGame(${g.id})">
+      <div class="feat-emoji">${g.emoji}</div>
+      <div class="feat-name">${g.name}</div>
+      <div class="feat-desc">${g.desc.substring(0,95)}…</div>
+      <div class="feat-price${g.price===0?' free':''}">${g.price===0?'Бесплатно':g.price+' ₽'}</div>
+    </div>`).join('');
+}
+
+function renderHeroShowcase(){
+  const picks=[GAMES[2],GAMES[0],GAMES[6]];
+  document.getElementById('hero-showcase').innerHTML=picks.map(g=>`
+    <div class="showcase-card" onclick="openGame(${g.id})">
+      <div class="showcase-thumb" style="background:${g.color}">${g.emoji}</div>
+      <div class="showcase-info">
+        <div class="showcase-name">${g.name}</div>
+        <div class="showcase-price">${g.price===0?'Бесплатно':g.price+' ₽'}</div>
+      </div>
+    </div>`).join('');
+}
+
+function setChip(f,el){
+  currentFilter=f;updateSectionTitle(f);
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.s-item').forEach(s=>s.classList.remove('active'));
+  goPage('store');renderGames();
+  setTimeout(()=>document.querySelector('.store-layout').scrollIntoView({behavior:'smooth'}),100);
+}
+
+function setSidebar(f,el){
+  currentFilter=f;updateSectionTitle(f);
+  document.querySelectorAll('.s-item').forEach(s=>s.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));
+  renderGames();
+}
+
+function updateSectionTitle(f){
+  const t=document.getElementById('sec-title');if(!t)return;
+  if(f==='Все')t.innerHTML='Все <span>игры</span>';
+  else if(f==='Sale')t.innerHTML='Игры <span>со скидкой</span>';
+  else if(f==='Бесплатно')t.innerHTML='<span>Бесплатные</span> игры';
+  else t.innerHTML=`<span>${f}</span>`;
+}
+
+function openGame(id){
+  const g=GAMES.find(x=>x.id===id);if(!g)return;
+  const isSale=g.price<g.orig&&g.orig>0,isFree=g.price===0,inC=inCartSet.has(g.id);
+
+  document.getElementById('game-hero-wrap').innerHTML=`
+    <div class="game-hero" style="background:${g.color}">
+      <div class="game-hero-bg">${g.emoji}</div>
+      <div class="game-hero-overlay"></div>
+      <div class="game-hero-content">
+        <div class="game-big-emoji">${g.emoji}</div>
+        <div>
+          <div class="game-hero-genre">${g.dev.toUpperCase()} · ${g.year}</div>
+          <div class="game-hero-title">${g.name}</div>
+          <div class="game-hero-meta">
+            <span class="game-hero-stars">${'★'.repeat(Math.round(g.stars))}${'☆'.repeat(5-Math.round(g.stars))}</span>
+            <span>${g.stars} · ${g.reviews.toLocaleString()} отзывов</span>
+            <span class="score-pill ${g.scoreType}">${g.score}</span>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('game-main').innerHTML=`
+    <div class="block">
+      <div class="block-title">Об игре</div>
+      <div class="game-desc-text">${g.desc}</div>
+    </div>
+    <div class="screenshots">${g.screens.map(s=>`<div class="screenshot">${s}</div>`).join('')}</div>
+    <div class="block">
+      <div class="block-title">Системные требования</div>
+      <div class="req-tabs">
+        <button class="req-tab active" id="rt-min-${id}" onclick="switchReq('min',${id})">МИНИМАЛЬНЫЕ</button>
+        <button class="req-tab" id="rt-rec-${id}" onclick="switchReq('rec',${id})">РЕКОМЕНДУЕМЫЕ</button>
+      </div>
+      <div id="req-body-${id}">${buildReqTable(g,'min')}</div>
+      <div class="req-os-note">* Может поддерживаться или нет. Убедитесь сами перед покупкой.</div>
+    </div>
+    <div class="block">
+      <div class="block-title">Отзывы игроков</div>
+      <div class="score-pill ${g.scoreType}" style="margin-bottom:14px">${g.score} · ${g.reviews.toLocaleString()} отзывов</div>
+      ${[
+        {n:'NightRunner_99',s:5,h:847,t:'Потрясающая игра, потерял счёт времени. Рекомендую всем без исключения!'},
+        {n:'PixelWolf2077',s:4,h:312,t:'Очень круто, немного затянутый второй акт, но финал окупает всё с лихвой.'},
+        {n:'CyberKat_pro',s:5,h:1204,t:'Атмосфера засасывает с первых секунд. Одна из лучших покупок в моей библиотеке.'},
+      ].map(r=>`<div class="review-item">
+        <div class="review-header">
+          <div class="review-avatar">${r.n[0]}</div>
+          <div class="review-name">${r.n}</div>
+          <div class="review-rec">👍 Рекомендует</div>
+        </div>
+        <div class="review-text">${r.t}</div>
+        <div class="review-date">${r.h} ч. в игре · 5 дней назад</div>
+      </div>`).join('')}
+    </div>`;
+
+  const priceHtml=isFree
+    ?`<div class="pc-price-wrap"><span class="pc-price free">Бесплатно</span></div>`
+    :isSale
+    ?`<div class="pc-price-wrap"><span class="pc-discount">-${Math.round((1-g.price/g.orig)*100)}%</span><span class="pc-orig">${g.orig} ₽</span></div><div class="pc-price-wrap" style="margin-top:4px"><span class="pc-price">${g.price} ₽</span></div>`
+    :`<div class="pc-price-wrap"><span class="pc-price">${g.price} ₽</span></div>`;
+
+  document.getElementById('game-side').innerHTML=`
+    <div class="purchase-card">
+      <div class="pc-score">Оценки: <strong>${g.score}</strong></div>
+      ${priceHtml}
+      <div class="pc-meta" style="margin-top:8px">Мгновенная активация · Достижения · Steam-карточки</div>
+      <button class="pc-btn${inC?' added':''}" id="pc-btn-${id}" onclick="addToCart(${id});document.getElementById('pc-btn-${id}').textContent='✓ В корзине';document.getElementById('pc-btn-${id}').classList.add('added')">${inC?'✓ В корзине':'Добавить в корзину'}</button>
+      <button class="pc-wishlist" onclick="toast('${g.name.replace(/'/g,"\\'")} добавлена в список желаемого ♥')">♥ В список желаемого</button>
+      <div class="pc-info-row"><span>Разработчик</span><span>${g.dev}</span></div>
+      <div class="pc-info-row"><span>Издатель</span><span>${g.pub}</span></div>
+      <div class="pc-info-row"><span>Дата выхода</span><span>${g.year}</span></div>
+      <div class="pc-info-row"><span>Жанр</span><span>${g.genre}</span></div>
+      <div class="pc-tags" style="margin-top:14px">${g.tags.map(t=>`<span class="pc-tag">${t}</span>`).join('')}</div>
+    </div>
+    <div class="block">
+      <div class="block-title" style="font-size:11px;letter-spacing:2px">ДОСТИЖЕНИЯ</div>
+      ${[
+        {i:'🏆',n:'Первые шаги',d:'Начни игру'},
+        {i:'⭐',n:'100 часов',d:'Проведи 100 часов'},
+        {i:'💎',n:'Коллекционер',d:'Собери всё'},
+        {i:'🔥',n:'Легенда',d:'Пройди на максимальной сложности'},
+      ].map(a=>`<div class="ach-item">
+        <div class="ach-icon">${a.i}</div>
+        <div><div class="ach-name">${a.n}</div><div class="ach-desc">${a.d}</div></div>
+      </div>`).join('')}
+    </div>`;
+
+  goPage('game');
+}
+
+function buildReqTable(g,type){
+  const r=g.req[type];
+  return `<table class="req-table">
+    <tr><td>ОС</td><td>${r.os}</td></tr>
+    <tr><td>Процессор</td><td>${r.cpu}</td></tr>
+    <tr><td>ОЗУ</td><td>${r.ram}</td></tr>
+    <tr><td>Видеокарта</td><td>${r.gpu}</td></tr>
+    <tr><td>DirectX</td><td>${r.dx}</td></tr>
+    <tr><td>Место на диске</td><td>${r.disk}</td></tr>
+  </table>`;
+}
+
+function switchReq(type,gid){
+  const g=GAMES.find(x=>x.id===gid);if(!g)return;
+  document.getElementById('rt-min-'+gid).classList.toggle('active',type==='min');
+  document.getElementById('rt-rec-'+gid).classList.toggle('active',type==='rec');
+  document.getElementById('req-body-'+gid).innerHTML=buildReqTable(g,type);
+}
+
+function addToCart(id){
+  const g=GAMES.find(x=>x.id===id);if(!g)return;
+  if(inCartSet.has(id)){toast('Уже в корзине!','error');return;}
+  cart.push(g);inCartSet.add(id);
+  document.getElementById('cart-count').textContent=cart.length;
+  toast(`«${g.name}» добавлена в корзину!`);
+  renderGames();
+}
+
+function removeFromCart(id){
+  cart=cart.filter(g=>g.id!==id);inCartSet.delete(id);
+  document.getElementById('cart-count').textContent=cart.length;
+  renderCart();renderGames();
+}
+
+function renderCart(){
+  const wrap=document.getElementById('cart-content');
+  if(!cart.length){
+    wrap.innerHTML=`<div class="cart-empty">
+      <div class="cart-empty-icon">🛒</div>
+      <p>Корзина пуста — пора это исправить!</p>
+      <button class="btn-prim" onclick="goPage('store')">В магазин</button>
+    </div>`;return;
+  }
+  const total=cart.reduce((s,g)=>s+g.price,0);
+  const saved=cart.reduce((s,g)=>s+(g.orig-g.price),0);
+  wrap.innerHTML=`<div class="cart-layout">
+    <div class="cart-items">${cart.map(g=>`
+      <div class="cart-item">
+        <div class="cart-emoji">${g.emoji}</div>
+        <div class="cart-info">
+          <div class="cart-item-name">${g.name}</div>
+          <div class="cart-item-sub">${g.genre} · ${g.dev}</div>
+        </div>
+        <div class="cart-item-price${g.price===0?' free':''}">${g.price===0?'Бесплатно':g.price+' ₽'}</div>
+        <button class="cart-remove" onclick="removeFromCart(${g.id})">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
+        </button>
+      </div>`).join('')}</div>
+    <div class="order-card">
+      <div class="order-title">Итого</div>
+      <div class="order-row"><span>Игр</span><span>${cart.length} шт.</span></div>
+      ${saved>0?`<div class="order-row"><span>Экономия</span><span style="color:var(--n3)">−${saved} ₽</span></div>`:''}
+      <div class="order-total"><span>К оплате</span><span>${total} ₽</span></div>
+      <button class="order-btn" onclick="checkout()">Оплатить</button>
+      <div class="order-promo">
+        <input type="text" placeholder="Промокод" id="promo-inp">
+        <button onclick="applyPromo()">ОК</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function checkout(){
+  if(!currentUser){toast('Войдите в аккаунт для оплаты','error');setTimeout(()=>goPage('auth'),900);return;}
+  cart=[];inCartSet.clear();
+  document.getElementById('cart-count').textContent=0;
+  document.getElementById('cart-content').innerHTML=`
+    <div class="order-success">
+      <div class="os-icon">🎉</div>
+      <div class="os-title">Покупка оформлена!</div>
+      <div class="os-sub">Игры добавлены в библиотеку.<br>Приятной игры, <strong>${currentUser}</strong>!</div>
+      <button class="os-btn" onclick="goPage('store')">Вернуться в магазин</button>
+    </div>`;
+}
+
+function applyPromo(){
+  const v=document.getElementById('promo-inp').value.toUpperCase();
+  if(v==='VLEZ2024')toast('Промокод применён — скидка 10%! 🎉');
+  else toast('Промокод не найден','error');
+}
+
+function switchAuthTab(tab){
+  authTab=tab;
+  document.getElementById('tab-login').classList.toggle('active',tab==='login');
+  document.getElementById('tab-reg').classList.toggle('active',tab==='reg');
+  document.getElementById('auth-success').classList.remove('show');
+  renderAuthForm();
+}
+
+function renderAuthForm(){
+  const w=document.getElementById('auth-form-wrap');
+  if(authTab==='login'){
+    w.innerHTML=`
+      <div class="form-group"><label class="form-label">Email или никнейм</label><input class="form-inp" id="lu" placeholder="gamer@vlez.store"></div>
+      <div class="form-group"><label class="form-label">Пароль</label><input class="form-inp" type="password" id="lp" placeholder="••••••••"></div>
+      <button class="form-submit" onclick="doLogin()">Войти в VLEZ STORE</button>
+      <div class="form-divider">или</div>
+      <button class="oauth-btn" onclick="oauthLogin()">🔵 Войти через Google</button>
+      <button class="oauth-btn" onclick="oauthLogin()">🎮 Войти через Steam</button>
+      <div class="auth-footer"><a onclick="switchAuthTab('reg')">Нет аккаунта? Зарегистрироваться</a></div>`;
+  }else{
+    w.innerHTML=`
+      <div class="form-group"><label class="form-label">Никнейм</label><input class="form-inp" id="rn" placeholder="CoolGamer2000"></div>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-inp" type="email" id="re" placeholder="you@email.com"></div>
+      <div class="form-group"><label class="form-label">Пароль</label><input class="form-inp" type="password" id="rp" placeholder="Не менее 8 символов"></div>
+      <button class="form-submit" onclick="doRegister()">Создать аккаунт</button>
+      <div class="auth-benefits">
+        <div class="benefit-row"><span class="benefit-icon">✓</span>Библиотека и достижения</div>
+        <div class="benefit-row"><span class="benefit-icon">✓</span>Персональные скидки</div>
+        <div class="benefit-row"><span class="benefit-icon">✓</span>Мгновенная активация</div>
+      </div>
+      <div class="auth-footer"><a onclick="switchAuthTab('login')">Уже есть аккаунт? Войти</a></div>`;
+  }
+}
+
+function doLogin(){
+  const u=document.getElementById('lu').value.trim(),p=document.getElementById('lp').value;
+  if(!u||!p){toast('Заполните все поля','error');return;}
+  loginSuccess(u.split('@')[0]);
+}
+function doRegister(){
+  const n=document.getElementById('rn').value.trim(),e=document.getElementById('re').value.trim(),p=document.getElementById('rp').value;
+  if(!n||!e||!p){toast('Заполните все поля','error');return;}
+  if(p.length<8){toast('Пароль минимум 8 символов','error');return;}
+  document.getElementById('auth-form-wrap').innerHTML='';
+  document.getElementById('auth-success').classList.add('show');
+  setTimeout(()=>loginSuccess(n),1500);
+}
+function oauthLogin(){loginSuccess('Player_'+Math.floor(Math.random()*9999));}
+function loginSuccess(name){
+  currentUser=name;
+  document.getElementById('nav-auth-area').innerHTML=`
+    <div class="user-info" onclick="toast('Привет, ${name}! 🎮')">
+      <div class="nav-avatar">${name[0].toUpperCase()}</div>
+      <span class="user-name">${name}</span>
+    </div>`;
+  toast(`Добро пожаловать, ${name}! 🎮`);
+  setTimeout(()=>goPage('store'),800);
+}
+
+let toastTimer;
+function toast(msg,type=''){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.className=type?`show ${type}`:'show';
+  clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.className='',3000);
+}
+
+renderHeroShowcase();renderGames();renderFeatured();renderAuthForm();
+</script>
+</body>
+</html>
